@@ -72,10 +72,7 @@
     function fitByZoom() {
       if (!img.naturalWidth || !img.naturalHeight) return;
     
-	  const oldZoom = window.devicePixelRatio || 1;
-      const zoom = window.devicePixelRatio || 1;
-	  console.log("zoom:", zoom, "oldZoom:", oldZoom);
-	  
+      const zoom = window.devicePixelRatio || 1;	  
       const screenW = window.innerWidth;
       const screenH = window.innerHeight;
       const imgRatio = img.naturalWidth / img.naturalHeight;
@@ -93,8 +90,8 @@
         newW = newH * imgRatio;
       }
     
-      img.width = Math.round(newW);
-      img.height = Math.round(newH);
+      img.width = Math.floor(newW);
+      img.height = Math.floor(newH);
     
       console.log(`zoom=${zoom}, window=${screenW}×${screenH}, image=${img.width}×${img.height}`);
     }
