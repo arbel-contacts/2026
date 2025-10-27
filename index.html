@@ -69,35 +69,35 @@
     }
 	checkAndLoadImage();
 
-    function setExactSize() {
+    function fitByZoom() {
       if (!img.naturalWidth || !img.naturalHeight) return;
-
+    
+      const zoom = window.devicePixelRatio || 1;
       const screenW = window.innerWidth;
       const screenH = window.innerHeight;
       const imgRatio = img.naturalWidth / img.naturalHeight;
       const screenRatio = screenW / screenH;
-
+    
       let newW, newH;
-
+    
       if (imgRatio > screenRatio) {
-        // התמונה רחבה מהמסך — נקבע רוחב מלא לפי המסך
-        newW = screenW;
-        newH = screenW / imgRatio;
+        // Wide image → limit by width
+        newW = screenW * zoom;
+        newH = newW / imgRatio;
       } else {
-        // התמונה גבוהה מהמסך — נקבע גובה מלא לפי המסך
-        newH = screenH;
-        newW = screenH * imgRatio;
+        // Tall image → limit by height
+        newH = screenH * zoom;
+        newW = newH * imgRatio;
       }
-
-      // קובע גודל אמיתי (פיקסלים)
+    
       img.width = Math.round(newW);
       img.height = Math.round(newH);
-
-      console.log(`Set exact size: ${img.width}×${img.height}`);
+    
+      console.log(`zoom=${zoom}, window=${screenW}×${screenH}, image=${img.width}×${img.height}`);
     }
     
-	if (img.complete) setExactSize();
-    img.addEventListener("load", setExactSize);
+	if (img.complete) fitByZoom();
+    img.addEventListener("load", fitByZoom);
     //window.addEventListener("resize", setExactSize);
 
     // Re-check every 60 seconds without disturbing the user
