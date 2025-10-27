@@ -72,7 +72,10 @@
     function fitByZoom() {
       if (!img.naturalWidth || !img.naturalHeight) return;
     
+	  const oldZoom = window.devicePixelRatio || 1;
       const zoom = window.devicePixelRatio || 1;
+	  console.log("zoom:", zoom, "oldZoom:", oldZoom);
+	  
       const screenW = window.innerWidth;
       const screenH = window.innerHeight;
       const imgRatio = img.naturalWidth / img.naturalHeight;
