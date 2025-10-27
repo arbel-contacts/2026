@@ -20,13 +20,19 @@
 
   <title>דף קשר ארבל</title>
   <style>
-    html, body { margin:0; background:#f2f2f2; }
-	body { text-align:center; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #f2f2f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
     img {
-      height: auto;
-      width: auto;
+      display: block;
       border-radius: 12px;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
     }
   </style>
 </head>
@@ -67,28 +73,38 @@
         img.src = url; // fallback in case of error
       }
     }
+	checkAndLoadImage();
 
-    function fitToWindow() {
-          const img = document.getElementById('mainImage');
-          // natural sizes are available after the image is loaded
-          if (!img.naturalWidth || !img.naturalHeight) return;
+    function setExactSize() {
+      if (!img.naturalWidth || !img.naturalHeight) return;
+
+      const screenW = window.innerWidth;
+      const screenH = window.innerHeight;
+      const imgRatio = img.naturalWidth / img.naturalHeight;
+      const screenRatio = screenW / screenH;
+
+      let newW, newH;
+
+      if (imgRatio > screenRatio) {
+        // התמונה רחבה מהמסך — נקבע רוחב מלא לפי המסך
+        newW = screenW;
+        newH = screenW / imgRatio;
+      } else {
+        // התמונה גבוהה מהמסך — נקבע גובה מלא לפי המסך
+        newH = screenH;
+        newW = screenH * imgRatio;
+      }
+
+      // קובע גודל אמיתי (פיקסלים)
+      img.width = Math.round(newW);
+      img.height = Math.round(newH);
+
+      console.log(`Set exact size: ${img.width}×${img.height}`);
+    }
     
-          const maxW = window.innerWidth;
-          const maxH = window.innerHeight;
-    
-          const scale = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
-    
-          // Always scale to fit window (up or down)
-          img.style.transform = `scale(${scale})`;
-        }
-	
-    // Run initial check on page load
-    checkAndLoadImage();
-	
-	const img = document.getElementById('mainImage');
-    if (img.complete) fitToWindow();
-    img.addEventListener('load', fitToWindow);
-    window.addEventListener('resize', fitToWindow);
+	if (img.complete) setExactSize();
+    img.addEventListener("load", setExactSize);
+    //window.addEventListener("resize", setExactSize);
 
     // Re-check every 60 seconds without disturbing the user
     setInterval(checkAndLoadImage, 60000);
