@@ -34,6 +34,12 @@
   <img id="mainImage" alt="טוען את דף הקשר" />
 
   <script>
+  
+    fetch(window.location.href, { cache: "no-store" })
+      .then(() => console.log("Fetched fresh HTML copy for next reload"))
+      .catch(() => console.warn("Error, Could not fetch fresh HTML copy"));
+	
+	
     const img = document.getElementById("mainImage");
     const url = "arbel.png";
     const localKey = "arbel_last_modified";
