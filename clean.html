@@ -31,7 +31,7 @@
   </style>
 </head>
 <body>
-  <img id="mainImage" alt="טוען את דף הקשר" />
+  <img id="mainImage" url = "arbel.png" alt="טוען את דף הקשר" />
 
   <script>
   
@@ -60,11 +60,9 @@
           localStorage.setItem(localKey, serverModified);
         } else {
           console.log("Image unchanged");
-          img.src = url; // browser will load from cache if available
         }
       } catch (e) {
         console.error("Error checking image:", e);
-        img.src = url; // fallback in case of error
       }
     }
 	checkAndLoadImage();
