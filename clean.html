@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+  <meta name="description" content="דף קשר ארבל" />
+  <meta property="og:title" content="דף קשר ארבל" />
+  <meta property="og:description" content="דף קשר ארבל" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://arbel-contacts.github.io/2026/" />
+  <meta property="og:image" content="https://arbel-contacts.github.io/2026/arbel-thumbnail.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="he_IL" />
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <title>דף קשר ארבל</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #f2f2f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    img {
+      display: block;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+    }
+  </style>
+</head>
+<body>
+  <img id="mainImage" alt="טוען את דף הקשר" />
+
+  <script>
+  
+    fetch(window.location.href, { cache: "no-store" })
+      .then(() => console.log("Fetched fresh HTML copy for next reload"))
+      .catch(() => console.warn("Error, Could not fetch fresh HTML copy"));
+	
+	
+    const img = document.getElementById("mainImage");
+    const url = "arbel.png";
+    const localKey = "arbel_last_modified";
+    let lastKnownModified = localStorage.getItem(localKey);
+
+    async function checkAndLoadImage() {
+      try {
+        // Send a lightweight HEAD request to get the Last-Modified timestamp
+        const res = await fetch(url, { method: "HEAD", cache: "no-cache" });
+        const serverModified = res.headers.get("Last-Modified");
+        console.log("Local Modified:", lastKnownModified, "Server Modified:", serverModified);
+
+        // If first time loading, or the file has been updated on the server
+        if (!lastKnownModified || (serverModified && serverModified !== lastKnownModified)) {
+          console.log("downloading new version");
+          img.src = url + "?v=" + Date.now(); // force new download (cache-busting)
+          lastKnownModified = serverModified;
+          localStorage.setItem(localKey, serverModified);
+        } else {
+          console.log("Image unchanged");
+          img.src = url; // browser will load from cache if available
+        }
+      } catch (e) {
+        console.error("Error checking image:", e);
+        img.src = url; // fallback in case of error
+      }
+    }
+	checkAndLoadImage();
+
+    // Re-check every 60 seconds without disturbing the user
+    setInterval(checkAndLoadImage, 60000);
+  </script>
+</body>
+</html>
